@@ -4,10 +4,6 @@
   "description": "A Hapi plugin that wraps passport-saml for SAML SSO (as SP)",
   "main": "lib/index",
   "types": "lib/index",
-  "scripts": {
-    "start": "npm run build:live",
-    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts"
-  },
   "engines": {
     "node": ">=10.0.0"
   },
@@ -17,6 +13,9 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/molekilla/hapi-passport-saml.git"
+  },
+  "scripts": {
+    "lint": "eslint ."
   },
   "keywords": [
     "saml",
@@ -30,18 +29,16 @@
   },
   "homepage": "https://github.com/molekilla/hapi-passport-saml#readme",
   "dependencies": {
-    "boom": "^7.2.0",
-    "debug": "^2.2.0",
-    "passport-saml": "^1.1.0"
+    "@hapi/boom": "9.x.x",
+    "passport-saml": "2.x.x"
   },
   "peerDependencies": {
-    "hapi": ">= 17.0.0"
+    "@hapi/hapi": "20.x.x"
   },
   "devDependencies": {
-    "@types/hapi": "^15.0.0",
-    "@types/node": "^10.5.2",
-    "nodemon": "^1.18.2",
-    "ts-node": "^7.0.0",
-    "typescript": "^2.9.2"
+    "@hapi/eslint-config-hapi": "13.x.x",
+    "@hapi/eslint-plugin-hapi": "4.x.x",
+    "babel-eslint": "10.x.x",
+    "eslint": "7.x.x"
   }
 }
