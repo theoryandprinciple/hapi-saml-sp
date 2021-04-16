@@ -1,6 +1,6 @@
 {
   "name": "hapi-saml-sp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Hapi plugin to wrap passport-saml for use as a SAML Service Provider",
   "main": "lib/index.js",
   "engines": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/molekilla/hapi-passport-saml.git"
+    "url": "git+ssh://git@github.com/theoryandprinciple/hapi-saml-sp.git"
   },
   "scripts": {
     "lint": "eslint ."
