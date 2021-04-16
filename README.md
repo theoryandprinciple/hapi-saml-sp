@@ -18,7 +18,7 @@ If you're interested in expanding/improving, open an issue - chances are I'd be 
 take a PR.
 
 ## Current release
-0.1.0
+0.1.3
 
 ## Install
 
@@ -98,11 +98,13 @@ that a look.
 
 ## Demo application
 
-[Demo](https://github.com/theoryandprinciple/tp-saml-sp)
+[Demo](https://github.com/theoryandprinciple/hapi-saml-sp-demo)
 
-## References, Ideas and Based from
+## References
 * [Saml2](https://github.com/Clever/saml2)
 * [Passport-saml](https://github.com/bergie/passport-saml)
+
+## Based on
 * [hapi-passport-saml](https://github.com/molekilla/hapi-passport-saml)
 
 ## License

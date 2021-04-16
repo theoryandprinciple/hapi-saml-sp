@@ -1,6 +1,6 @@
 {
   "name": "hapi-saml-sp",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "A Hapi plugin to wrap passport-saml for use as a SAML Service Provider",
   "main": "lib/index.js",
   "engines": {
