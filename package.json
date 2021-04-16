@@ -1,15 +1,14 @@
 {
-  "name": "hapi-passport-saml",
-  "version": "2.1.1",
-  "description": "A Hapi plugin that wraps passport-saml for SAML SSO (as SP)",
-  "main": "lib/index",
-  "types": "lib/index",
+  "name": "hapi-saml-sp",
+  "version": "0.1.0",
+  "description": "A Hapi plugin to wrap passport-saml for use as a SAML Service Provider",
+  "main": "lib/index.js",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=14.0.0"
   },
-  "files": [
-    "lib"
-  ],
+  "directories": {
+    "lib": "lib"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/molekilla/hapi-passport-saml.git"
@@ -22,12 +21,21 @@
     "sso",
     "hapi"
   ],
-  "author": "Rogelio Morrell",
+  "contributors": [
+    {
+      "name": "Rogelio Morrell",
+      "url": "https://github.com/molekilla/"
+    },
+    {
+      "name": "Matt Boutet",
+      "url": "https://github.com/mattboutet/"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/molekilla/hapi-passport-saml/issues"
+    "url": "https://github.com/theoryandprinciple/hapi-saml-sp/issues"
   },
-  "homepage": "https://github.com/molekilla/hapi-passport-saml#readme",
+  "homepage": "https://github.com/theoryandprinciple/hapi-saml-sp",
   "dependencies": {
     "@hapi/boom": "9.x.x",
     "passport-saml": "2.x.x"

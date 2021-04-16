@@ -1,6 +1,9 @@
 The MIT License (MIT)
 
-Copyright (c) 2015 Rogelio Morrell
+Copyright for portions of project hapi-saml-sp are held by Rogelio Morrell, (2015)
+as part of project hapi-passport-saml. All other copyright for project
+hapi-saml-sp are held by Matt Boutet (2021).
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

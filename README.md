@@ -1,123 +1,109 @@
-# hapi-passport-saml
-A Hapi plugin that wraps passport-saml for SAML SSO (as SP)
-with support for multiple strategies
+# hapi-saml-sp
+A Hapi plugin to wrap passport-saml for use as a SAML Service Provider.
 
-**Version 2.1.0 is compatible with Hapi 17. For previous version, stay with 1.x.x**
+This is a plugin that I built out of necessity when I couldn't find what I
+needed anywhere.  I'm not a SAML expert, and while tests are on my TODO list
+for this plugin, it was built to satisfy an immediate need and I needed it _yesterday_ so
+I view this as very much an MVP (Minimum Viable Plugin).
+
+I've tested this with samltest.id, Azure Active Directory and ADFS.  ADFS requires some
+non-standard modifications to the metadata (at least, some versions of ADFS do).  Talk
+to your IDP if things aren't going as expected.
+
+RelayState is untested, as is logout.  Encrypted assertions are also untested - the
+general consensus I've seen is that they don't generally add _enough_ extra security
+to be worth the extra effort.
+
+If you're interested in expanding/improving, open an issue - chances are I'd be happy to
+take a PR.
 
 ## Current release
-2.1.0
+0.1.0
 
 ## Install
 
-`npm install hapi-passport-saml`
+`npm install hapi-saml-sp`
 
 ## Configuration
 
-Uses `samlidp.io` as IdP, read passport-saml for how to use options
+Uses `http://samltest.id/` as IdP - follow the instructions there to upload your metadata.
+Read passport-saml for how to use options in the `saml` section of `samlOptions` below.
+
+Fair warning - the `passport-saml` options assume a fair bit of background knowledge and
+familiarity with specialized SAML terminology.  If you don't have that, you might be better
+off scrolling down to the demo app below.
 
 ```javascript
-const Hapi = require('hapi');
-const saml = require('hapi-passport-saml');
-const routes = require('./routes/');
-
-const server = Hapi.Server({
-  port,
-});
+//this would be the samltest.id signing cert, from https://samltest.id/download/
+const idpCert = `MII...A==`;
 
 const samlOptions = {
-  // passport saml settings
-  saml: {
-    callbackUrl: 'http://localhost/api/sso/v1/assert',
-    logoutCallbackUrl: 'http://localhost/api/sso/v1/notifylogout',
-    logoutUrl: 'https://my-idp.samlidp.io/saml2/idp/SingleLogoutService.php',
-    host: 'localhost',
-    protocol: 'http',
-    entryPoint: 'https://my-idp.samlidp.io/saml2/idp/SSOService.php',
-    // Service Provider Private Signing Key
-    privateCert: fs.readFileSync(__dirname + '/privateSigning.pem', 'utf-8'),
-    // Service Provider Private Encryption Key
-    decryptionPvk: fs.readFileSync(__dirname + '/privateEncryption.pem', 'utf-8'),
-    // IdP Public Signing Key
-    cert: fs.readFileSync(__dirname + '/publicKey.crt', 'utf-8'),
-    issuer: 'my-saml'
+    // passport saml settings
+    saml: {
+        //this should be the same as the assert path in config below
+        callbackUrl: 'http://localhost/api/sso/v1/assert',
+        //logout functionality is untested at this time.
+        logoutCallbackUrl: 'http://localhost/api/sso/v1/notifylogout',
+        logoutUrl: 'https://samltest.id/idp/profile/Logout',
+
+        entryPoint: 'https://samltest.id/idp/profile/SAML2/Redirect/SSO',
+        privateKey: Fs.readFileSync(__dirname + '/../../your_entity_name.key'),
+        // IdP Public Signing Key
+        cert: idpCert,
+        issuer: 'your_entity_name'
   },
-  // hapi-passport-saml settings
+  // hapi-saml-sp settings
   config: {
-    // Service Provider Public Signing Key *Required if privateCert is provided
-    signingCert: fs.readFileSync(__dirname + '/publicKey.crt', 'utf-8'),
-    // Service Provider Public Encryption Key *Required if decryptionPvk is provided
-    decryptionCert: fs.readFileSync(__dirname + '/publicKey.crt', 'utf-8'),
-    // Plugin Routes
-    routes: {
-      // SAML Metadata
-      metadata: {
-        path: '/api/sso/v1/metadata.xml',
+      //public cert provided in metadata
+      signingCert: fs.readFileSync(__dirname + '/your_entity_name.cert', 'utf-8'),
+      // Plugin Routes
+      routes: {
+          metadata: {
+              path: '/saml/metadata.xml',
+              options: {
+                  description: 'Fetch SAML metadata',
+                    tags: ['api']
+              }
+          },
+          assert: {
+              path: '/login/saml',
+              options: {
+                  description: 'SAML login endpoint',
+                  tags: ['api']
+              }
+          }
       },
-      // SAML Assertion
-      assert: {
-        path: '/api/sso/v1/assert',
-      },
-    },
-    assertHooks: {
-      // Assertion Response Hook
-      // Use this to add any specific props for your business
-      // or appending to existing cookie
-      // or make use of the RelayState
-      onResponse: (profile, request, h) => {
-        if(request.payload.RelayState)
-          return h.redirect(request.payload.RelayState);
-        else
-          return h.response();
-      },
-    }
-  }
+      assertHooks: {
+        //This will get called after your SAML identity provider sends a
+        //POST request back to the assert endpoint specified above (e.g. /login/saml)
+        onResponse: (profile, request, h) => {
+
+            //your custom handling code goes in here.  I can't help much with this,
+            //but you could set a cookie, or generate a JWT and h.redirect() your user to your
+            //front end with that.
+            return h.redirect('https://your.frontend.test);
+        }
 };
-
-// Internal cookie settings
-const schemeOpts = {
-  password: '14523695874159852035.0',
-  isSecure: false,
-  isHttpOnly: false,
-  ttl: 3600,
-};
-
-(async function start() {
-  try {
-    await server.register([
-      { plugin: saml, options: samlOptions },
-    ]);
-
-    await server.auth.strategy('single-sign-on', 'saml', schemeOpts);
-    await server.auth.default('single-sign-on');
-    await server.route(routes);
-    await server.start();
-    console.log(`Server listening on ${port}`);
-  } catch (e) {
-    server.stop();
-    console.error('Server stopped due to an error', e);
-  }
-}());
 ```
 
->Note: Internal cookie name is `hapi-passport-saml-cookie`, if you need to read the SAML credentials for integration with other strategies, use assertion hook.
+## Note: This plug in doesn't attempt to set up an auth strategy for you.
 
-## Multiple strategies
+I'm assuming that you probably already have an auth strategy you're comfortable with.
+If that's not the case, I've been very happy with `@hapi/jwt`.
 
-Use `hapi-passport-saml` as the last strategy. Tested with `try` and `required` modes.
-
-* `required`: If successful, returns credentials, else HTTP 200 with JSON
-* `try`: If successful, returns credentials, else empty credentials and isAuthenticated set to false
-
-More info: [Integrating hapi cookie with hapi passport saml v1.1.0
-](https://gist.github.com/molekilla/a7a899a3b3d7cbf2ae89998606102330)
+Whatever you choose to use, you'll need to do _something_ in `assertHooks.onResponse()`
+above.  This is a big difference between this library and hapi-passport-saml, so
+if you'd rather have a cookie set before onResponse is ever called, it's worth giving
+that a look.
 
 ## Demo application
 
-[Demo](https://github.com/molekilla/hapi-passport-saml-test)
+[Demo](https://github.com/theoryandprinciple/tp-saml-sp)
 
 ## References, Ideas and Based from
 * [Saml2](https://github.com/Clever/saml2)
 * [Passport-saml](https://github.com/bergie/passport-saml)
+* [hapi-passport-saml](https://github.com/molekilla/hapi-passport-saml)
 
 ## License
 MIT
