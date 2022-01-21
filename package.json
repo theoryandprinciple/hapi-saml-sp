@@ -38,7 +38,7 @@
   "homepage": "https://github.com/theoryandprinciple/hapi-saml-sp",
   "dependencies": {
     "@hapi/boom": "9.x.x",
-    "passport-saml": "2.x.x"
+    "passport-saml": "3.2.1"
   },
   "peerDependencies": {
     "@hapi/hapi": "20.x.x"
