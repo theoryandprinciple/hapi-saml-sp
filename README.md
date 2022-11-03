@@ -18,7 +18,7 @@ If you're interested in expanding/improving, open an issue - chances are I'd be 
 take a PR.
 
 ## Current release
-0.1.3
+0.1.4
 
 ## Install
 
