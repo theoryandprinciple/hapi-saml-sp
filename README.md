@@ -2,12 +2,11 @@
 A Hapi plugin to wrap passport-saml for use as a SAML Service Provider.
 
 This is a plugin that I built out of necessity when I couldn't find what I
-needed anywhere.  I'm not a SAML expert, and while tests are on my TODO list
-for this plugin, it was built to satisfy an immediate need and I needed it _yesterday_ so
-I view this as very much an MVP (Minimum Viable Plugin).
+needed anywhere.  I'm not a SAML expert, it was built to satisfy an immediate
+need and I needed it _yesterday_ so I view this as very much an MVP (Minimum Viable Plugin).
 
-I've tested this with samltest.id, Azure Active Directory and ADFS.  ADFS requires some
-non-standard modifications to the metadata (at least, some versions of ADFS do).  Talk
+I've tested this with https://fujifish.github.io/samling/samling.html, Azure Active Directory and ADFS.
+ADFS requires some non-standard modifications to the metadata (at least, some versions of ADFS do).  Talk
 to your IDP if things aren't going as expected.
 
 RelayState is untested, as is logout.  Encrypted assertions are also untested - the
@@ -18,7 +17,7 @@ If you're interested in expanding/improving, open an issue - chances are I'd be 
 take a PR.
 
 ## Current release
-0.1.4
+0.1.5
 
 ## Install
 
@@ -26,7 +25,7 @@ take a PR.
 
 ## Configuration
 
-Uses `http://samltest.id/` as IdP - follow the instructions there to upload your metadata.
+Uses `https://fujifish.github.io/samling/samling.html` as IdP - follow the instructions there to upload your metadata.
 Read passport-saml for how to use options in the `saml` section of `samlOptions` below.
 
 Fair warning - the `passport-saml` options assume a fair bit of background knowledge and
@@ -34,7 +33,7 @@ familiarity with specialized SAML terminology.  If you don't have that, you migh
 off scrolling down to the demo app below.
 
 ```javascript
-//this would be the samltest.id signing cert, from https://samltest.id/download/
+//this would be the samltest.id signing cert, from https://fujifish.github.io/samling/samling.html
 const idpCert = `MII...A==`;
 
 const samlOptions = {
@@ -51,6 +50,8 @@ const samlOptions = {
         // IdP Public Signing Key
         cert: idpCert,
         issuer: 'your_entity_name'
+        wantAssertionsSigned: true,
+        wantAuthnResponseSigned: true
   },
   // hapi-saml-sp settings
   config: {
@@ -102,7 +103,7 @@ that a look.
 
 ## References
 * [Saml2](https://github.com/Clever/saml2)
-* [Passport-saml](https://github.com/bergie/passport-saml)
+* [Passport-saml](https://github.com/node-saml/passport-saml)
 
 ## Based on
 * [hapi-passport-saml](https://github.com/molekilla/hapi-passport-saml)

@@ -1,6 +1,6 @@
 {
   "name": "hapi-saml-sp",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A Hapi plugin to wrap passport-saml for use as a SAML Service Provider",
   "main": "lib/index.js",
   "engines": {
@@ -38,10 +38,10 @@
   "homepage": "https://github.com/theoryandprinciple/hapi-saml-sp",
   "dependencies": {
     "@hapi/boom": "^10.0.0",
-    "passport-saml": "^3.2.3"
+    "@node-saml/passport-saml": "^5.0.1"
   },
   "peerDependencies": {
-    "@hapi/hapi": "^20.2.2"
+    "@hapi/hapi": ">=20.2.2 <22.0.0"
   },
   "devDependencies": {
     "@hapi/eslint-plugin": "^6.0.0",
